@@ -1,0 +1,41 @@
+{
+  "manifestVersion": "1.0.0",
+  "name": "TaskSchedulerManager",
+  "version": "1.1.2",
+  "displayName": "任务调度管理器",
+  "description": "管理 VCP 定时任务（VCPTimedContacts），支持创建、编辑、删除、列出任务。支持 interval 字段实现原生循环任务——执行完毕后自动推进触发时间，无需 AgentAssistant 链式续命。",
+  "author": "Nova",
+  "pluginType": "synchronous",
+  "entryPoint": {
+    "type": "nodejs",
+    "command": "node TaskSchedulerManager.js"
+  },
+  "communication": {
+    "protocol": "stdio",
+    "timeout": 10000
+  },
+  "capabilities": {
+    "invocationCommands": [
+      {
+        "commandIdentifier": "CreateTask",
+        "description": "创建一个定时任务，到期后 TaskScheduler 将自动调用指定插件。支持可选的 interval 字段实现永久循环任务。\n参数:\n- task_id (字符串, 可选): 任务唯一ID，不填则自动生成UUID。\n- scheduled_time (字符串, 必需): 首次触发时间，支持 ISO 8601（如 2026-03-01T09:00:00+08:00）或 YYYY-MM-DD-HH:mm（如 2026-03-01-09:00）。\n- tool_name_target (字符串, 必需): 目标插件名，如 AgentMessage、AgentAssistant 等。\n- arguments (字符串, 必需): 传入目标插件的参数，JSON格式字符串，如 {\"message\":\"提醒内容\"} 或 {\"agent_name\":\"Nova\",\"prompt\":\"任务\"}。\n- interval (整数, 可选): 循环间隔秒数，设置后永久循环，删文件即停止。\n调用示例:\n[TOOL_REQUEST]\ntool_name:[始]TaskSchedulerManager[末],\ncommand:[始]CreateTask[末],\nmaid:[始]Nova[末],\ntask_id:[始]my-task-001[末],\nscheduled_time:[始]2026-03-01-09:00[末],\ntool_name_target:[始]AgentMessage[末],\narguments:[始]{\"message\":\"提醒主人喝水\"}[末],\ninterval:[始]300[末]\n[END_TOOL_REQUEST]"
+      },
+      {
+        "commandIdentifier": "EditTask",
+        "description": "编辑已存在的定时任务，通过 task_id 定位，可选择性更新触发时间、目标插件、参数或循环间隔。\n参数:\n- task_id (字符串, 必需): 要编辑的任务ID。\n- scheduled_time (字符串, 可选): 新触发时间。\n- tool_name_target (字符串, 可选): 新目标插件名。\n- arguments (字符串, 可选): 新参数JSON字符串。\n- interval (字符串, 可选): 新循环间隔秒数，传0可移除循环。\n调用示例:\n[TOOL_REQUEST]\ntool_name:[始]TaskSchedulerManager[末],\ncommand:[始]EditTask[末],\nmaid:[始]Nova[末],\ntask_id:[始]my-task-001[末],\nscheduled_time:[始]2026-03-02T10:00:00+08:00[末]\n[END_TOOL_REQUEST]"
+      },
+      {
+        "commandIdentifier": "DeleteTask",
+        "description": "删除一个或多个定时任务，支持批量，多个 task_id 用英文逗号分隔。删除循环任务文件即永久停止循环。\n参数:\n- task_id (字符串, 必需): 任务ID，多个用逗号分隔。\n调用示例:\n[TOOL_REQUEST]\ntool_name:[始]TaskSchedulerManager[末],\ncommand:[始]DeleteTask[末],\nmaid:[始]Nova[末],\ntask_id:[始]my-task-001,my-task-002[末]\n[END_TOOL_REQUEST]"
+      },
+      {
+        "commandIdentifier": "ListTasks",
+        "description": "列出所有待执行的定时任务，按触发时间升序排列，循环任务标注间隔。\n参数: 无。\n调用示例:\n[TOOL_REQUEST]\ntool_name:[始]TaskSchedulerManager[末],\ncommand:[始]ListTasks[末],\nmaid:[始]Nova[末]\n[END_TOOL_REQUEST]"
+      },
+      {
+        "commandIdentifier": "RescheduleLoop",
+        "description": "手动触发循环任务续命，将触发时间推进一个 interval。\n参数:\n- task_id (字符串, 必需): 循环任务ID。\n调用示例:\n[TOOL_REQUEST]\ntool_name:[始]TaskSchedulerManager[末],\ncommand:[始]RescheduleLoop[末],\nmaid:[始]Nova[末],\ntask_id:[始]my-task-001[末]\n[END_TOOL_REQUEST]"
+      }
+    ]
+  }
+}

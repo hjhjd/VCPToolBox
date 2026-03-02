@@ -43,7 +43,7 @@ const {
     };
 })();
 
-const MODEL_NAME = 'hyb-Optimal/antigravity/gemini-3-pro-image';
+const MODEL_NAME = 'gemini-3-pro-image-preview';
 
 /**
  * 随机获取一个 API URL (实现随机均衡)

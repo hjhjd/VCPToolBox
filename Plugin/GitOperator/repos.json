@@ -1,0 +1,24 @@
+{
+  "defaultProfile": "VCPToolBox",
+  "profiles": {
+    "VCPToolBox": {
+      "localPath": "../../",
+      "push": {
+        "remote": "origin",
+        "url": "https://github.com/hjhjd/VCPToolBox.git",
+        "branch": "master"
+      },
+      "pull": {
+        "remote": "upstream",
+        "url": "https://github.com/lioensky/VCPToolBox.git",
+        "branch": "main"
+      },
+      "credentials": {
+        "email": "1276516805@qq.com",
+        "username": "hjhjd",
+        "token": "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"
+      },
+      "mergeStrategy": "merge"
+    }
+  }
+}

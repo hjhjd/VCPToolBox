@@ -27,19 +27,28 @@ const config = {
 };
 
 AgentDream.initialize(config, {
-    vcpLogFunctions: {
-        pushVcpInfo: (data) => {
-            console.log(`\n📡 [VCPInfo Broadcast] type: ${data.type}`);
-            console.log(JSON.stringify(data, null, 2).substring(0, 500));
-            if (JSON.stringify(data).length > 500) console.log('...(truncated for console)');
-            console.log('');
-        }
-    }
+  vcpLogFunctions: {
+    pushVcpInfo: (data) => {
+      console.log(`\n📡 [VCPInfo Broadcast] type: ${data.type}`);
+      console.log(JSON.stringify(data, null, 2).substring(0, 500));
+      if (JSON.stringify(data).length > 500)
+        console.log("...(truncated for console)");
+      console.log("");
+    },
+  },
 });
 
 // 触发梦境
 (async () => {
-    try {
+  try {
+    // 独立运行时需要手动初始化 KnowledgeBaseManager（VCP 服务启动时会自动完成）
+    const knowledgeBaseManager = require("../../KnowledgeBaseManager");
+    if (!knowledgeBaseManager.initialized) {
+      console.log("⏳ 初始化 KnowledgeBaseManager...");
+      await knowledgeBaseManager.initialize();
+      console.log("✅ KnowledgeBaseManager 初始化完成\n");
+    }
+
         console.log(`\n⏳ 开始入梦流程...\n`);
         const result = await AgentDream.triggerDream(agentName);
 

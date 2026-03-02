@@ -1,0 +1,14 @@
+../../bin/mcpo,sha256=-fWqz1LCABB8kmDPLCIhA7uKpPObvmIHnY-J2qQFBGA,201
+mcpo-0.0.9.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+mcpo-0.0.9.dist-info/METADATA,sha256=Prg0_J55rOhD1VVYIdgg7Yut857cRG_qOQWg7v_g104,3942
+mcpo-0.0.9.dist-info/RECORD,,
+mcpo-0.0.9.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
+mcpo-0.0.9.dist-info/WHEEL,sha256=qtCwoSJWgHk21S1Kb4ihdzI2rlJ1ZKaIurTj_ngOhyQ,87
+mcpo-0.0.9.dist-info/entry_points.txt,sha256=j-ij685X87TgdjfomwHlfEKnc3OLvriE_Q5pldtWdSc,34
+mcpo-0.0.9.dist-info/licenses/LICENSE,sha256=YxIiY2yxO9USUxPZvsQgG2Nu8YRgIkaG2yAkbDvCXGo,1077
+mcpo/__init__.py,sha256=VXZlUcsXImWTbEjO5PgEK09t5_Qz2N7XkVXRD8cNhPM,3548
+mcpo/__pycache__/__init__.cpython-312.pyc,,
+mcpo/__pycache__/main.cpython-312.pyc,,
+mcpo/main.py,sha256=KIEgfs1YQqGWs-YauCD8LxPOzavhtgFuF18C1X4_aqY,8595
+mcpo/utils/__pycache__/auth.cpython-312.pyc,,
+mcpo/utils/auth.py,sha256=C_Zh1CPwYuTAisquMSKqcNQ74jbki-DuRDGBgH5mO3M,1585
