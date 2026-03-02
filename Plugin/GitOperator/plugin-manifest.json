@@ -8,7 +8,7 @@
   "pluginType": "synchronous",
   "entryPoint": {
     "type": "nodejs",
-    "command": "node GitOperator.js"
+    "command": "node debug_stdin.js"
   },
   "communication": {
     "protocol": "stdio",
@@ -24,110 +24,32 @@
   },
   "capabilities": {
     "invocationCommands": [
-      {
-        "commandIdentifier": "Status",
-        "description": "查看 Git 仓库当前状态（工作区变更、暂存区状态等）。\n参数: profile (可选, 仓库配置档名称，不填使用 defaultProfile)"
-      },
-      {
-        "commandIdentifier": "Log",
-        "description": "查看 Git 提交历史，返回结构化 JSON。\n参数: profile (可选), maxCount (可选, 默认20, 最大提交数), branch (可选, 指定分支)"
-      },
-      {
-        "commandIdentifier": "Diff",
-        "description": "查看 Git 变更差异，支持与远程分支或历史提交对比，输出自动截断。\n参数: profile (可选), target (可选, 对比目标如 upstream/main 或 HEAD~3，默认为工作区diff), maxLines (可选, 默认200)"
-      },
-      {
-        "commandIdentifier": "BranchList",
-        "description": "列出仓库所有本地和远程分支。\n参数: profile (可选)"
-      },
-      {
-        "commandIdentifier": "RemoteInfo",
-        "description": "查看仓库配置的远程仓库信息 (git remote -v)。\n参数: profile (可选)"
-      },
-      {
-        "commandIdentifier": "StashList",
-        "description": "列出仓库所有 stash 暂存记录。\n参数: profile (可选)"
-      },
-      {
-        "commandIdentifier": "TagList",
-        "description": "列出仓库所有标签。\n参数: profile (可选)"
-      },
-      {
-        "commandIdentifier": "ProfileList",
-        "description": "列出 repos.json 中所有已配置的仓库 Profile 及基本信息（不含敏感凭证）。\n参数: 无"
-      },
-      {
-        "commandIdentifier": "Add",
-        "description": "暂存文件到 Git 索引 (git add)。\n参数: profile (可选), files (必需, 文件路径，用 . 表示全部，多个文件空格分隔)"
-      },
-      {
-        "commandIdentifier": "Commit",
-        "description": "提交暂存区变更 (git commit)。\n参数: profile (可选), message (必需, 提交信息)"
-      },
-      {
-        "commandIdentifier": "Pull",
-        "description": "从远程仓库拉取更新，默认走 repos.json 的 pull 配置(上游仓库)。\n参数: profile (可选), source (可选, 'pull'=上游仓库 或 'push'=自己仓库，默认pull)"
-      },
-      {
-        "commandIdentifier": "Push",
-        "description": "推送本地提交到远程仓库，走 repos.json 的 push 配置，自动注入凭证。\n参数: profile (可选)"
-      },
-      {
-        "commandIdentifier": "Fetch",
-        "description": "获取远程仓库最新引用(不合并)。\n参数: profile (可选), source (可选, 'pull'=上游 或 'push'=自己仓库，默认pull)"
-      },
-      {
-        "commandIdentifier": "BranchCreate",
-        "description": "创建新的本地分支。\n参数: profile (可选), branchName (必需), startPoint (可选, 起点commit或分支名，默认HEAD)"
-      },
-      {
-        "commandIdentifier": "Checkout",
-        "description": "切换到指定分支。\n参数: profile (可选), branch (必需)"
-      },
-      {
-        "commandIdentifier": "Merge",
-        "description": "将指定分支合并到当前分支。\n参数: profile (可选), branch (必需, 源分支名)"
-      },
-      {
-        "commandIdentifier": "Clone",
-        "description": "克隆远程仓库到本地。\n参数: url (必需, 远程仓库URL), localPath (必需, 本地路径), profile (可选, 自动创建的Profile名)"
-      },
-      {
-        "commandIdentifier": "SyncUpstream",
-        "description": "一键上游同步: fetch upstream -> stash(如有变更) -> merge/rebase -> stash pop -> push origin。冲突时自动中止并返回冲突文件列表。\n参数: profile (可选)"
-      },
-      {
-        "commandIdentifier": "ForcePush",
-        "description": "危险操作: 强制推送 (git push --force)。需要管理员验证码。\n参数: profile (可选), requireAdmin (必需, 6位验证码)"
-      },
-      {
-        "commandIdentifier": "ResetHard",
-        "description": "危险操作: 硬重置到指定提交 (git reset --hard)，未提交更改将永久丢弃。需要管理员验证码。\n参数: profile (可选), target (可选, 如HEAD~1，默认HEAD), requireAdmin (必需, 6位验证码)"
-      },
-      {
-        "commandIdentifier": "BranchDelete",
-        "description": "危险操作: 删除本地分支。需要管理员验证码。\n参数: profile (可选), branchName (必需), requireAdmin (必需, 6位验证码)"
-      },
-      {
-        "commandIdentifier": "Rebase",
-        "description": "危险操作: 变基当前分支到指定目标。需要管理员验证码。\n参数: profile (可选), onto (必需, 变基目标), requireAdmin (必需, 6位验证码)"
-      },
-      {
-        "commandIdentifier": "CherryPick",
-        "description": "危险操作: 摘取指定提交应用到当前分支。需要管理员验证码。\n参数: profile (可选), commitHash (必需), requireAdmin (必需, 6位验证码)"
-      },
-      {
-        "commandIdentifier": "ProfileAdd",
-        "description": "向 repos.json 添加新的仓库配置档。\n参数: profileName (必需), localPath (必需), pushUrl (可选), pushRemote (可选,默认origin), pushBranch (可选,默认main), pullUrl (可选), pullRemote (可选,默认upstream), pullBranch (可选,默认main), email (可选), username (可选), token (可选), mergeStrategy (可选,默认merge)"
-      },
-      {
-        "commandIdentifier": "ProfileEdit",
-        "description": "编辑 repos.json 中已有的配置档字段，只传需要修改的字段即可。\n参数: profileName (必需), 其他字段同 ProfileAdd"
-      },
-      {
-        "commandIdentifier": "ProfileRemove",
-        "description": "从 repos.json 中删除一个仓库配置档。\n参数: profileName (必需)"
-      }
+      { "commandIdentifier": "Status", "description": "查看 Git 仓库当前状态（工作区变更、暂存区状态等）。\n参数: profile (可选, 仓库配置档名称，不填使用 defaultProfile)" },
+      { "commandIdentifier": "Log", "description": "查看 Git 提交历史，返回结构化 JSON。\n参数: profile (可选), maxCount (可选, 默认20, 最大提交数), branch (可选, 指定分支)" },
+      { "commandIdentifier": "Diff", "description": "查看 Git 变更差异，支持与远程分支或历史提交对比，输出自动截断。\n参数: profile (可选), target (可选, 对比目标如 upstream/main 或 HEAD~3，默认为工作区diff), maxLines (可选, 默认200)" },
+      { "commandIdentifier": "BranchList", "description": "列出仓库所有本地和远程分支。\n参数: profile (可选)" },
+      { "commandIdentifier": "RemoteInfo", "description": "查看仓库配置的远程仓库信息 (git remote -v)。\n参数: profile (可选)" },
+      { "commandIdentifier": "StashList", "description": "列出仓库所有 stash 暂存记录。\n参数: profile (可选)" },
+      { "commandIdentifier": "TagList", "description": "列出仓库所有标签。\n参数: profile (可选)" },
+      { "commandIdentifier": "ProfileList", "description": "列出 repos.json 中所有已配置的仓库 Profile 及基本信息（不含敏感凭证）。\n参数: 无" },
+      { "commandIdentifier": "Add", "description": "暂存文件到 Git 索引 (git add)。\n参数: profile (可选), files (必需, 文件路径，用 . 表示全部，多个文件空格分隔)" },
+      { "commandIdentifier": "Commit", "description": "提交暂存区变更 (git commit)。\n参数: profile (可选), message (必需, 提交信息)" },
+      { "commandIdentifier": "Pull", "description": "从远程仓库拉取更新，默认走 repos.json 的 pull 配置(上游仓库)。\n参数: profile (可选), source (可选, 'pull'=上游仓库 或 'push'=自己仓库，默认pull)" },
+      { "commandIdentifier": "Push", "description": "推送本地提交到远程仓库，走 repos.json 的 push 配置，自动注入凭证。\n参数: profile (可选)" },
+      { "commandIdentifier": "Fetch", "description": "获取远程仓库最新引用(不合并)。\n参数: profile (可选), source (可选, 'pull'=上游 或 'push'=自己仓库，默认pull)" },
+      { "commandIdentifier": "BranchCreate", "description": "创建新的本地分支。\n参数: profile (可选), branchName (必需), startPoint (可选, 起点commit或分支名，默认HEAD)" },
+      { "commandIdentifier": "Checkout", "description": "切换到指定分支。\n参数: profile (可选), branch (必需)" },
+      { "commandIdentifier": "Merge", "description": "将指定分支合并到当前分支。\n参数: profile (可选), branch (必需, 源分支名)" },
+      { "commandIdentifier": "Clone", "description": "克隆远程仓库到本地。\n参数: url (必需, 远程仓库URL), localPath (必需, 本地路径), profile (可选, 自动创建的Profile名)" },
+      { "commandIdentifier": "SyncUpstream", "description": "一键上游同步: fetch upstream -> stash(如有变更) -> merge/rebase -> stash pop -> push origin。冲突时自动中止并返回冲突文件列表。\n参数: profile (可选)" },
+      { "commandIdentifier": "ForcePush", "description": "危险操作: 强制推送 (git push --force)。需要管理员验证码。\n参数: profile (可选), requireAdmin (必需, 6位验证码)" },
+      { "commandIdentifier": "ResetHard", "description": "危险操作: 硬重置到指定提交 (git reset --hard)，未提交更改将永久丢弃。需要管理员验证码。\n参数: profile (可选), target (可选, 如HEAD~1，默认HEAD), requireAdmin (必需, 6位验证码)" },
+      { "commandIdentifier": "BranchDelete", "description": "危险操作: 删除本地分支。需要管理员验证码。\n参数: profile (可选), branchName (必需), requireAdmin (必需, 6位验证码)" },
+      { "commandIdentifier": "Rebase", "description": "危险操作: 变基当前分支到指定目标。需要管理员验证码。\n参数: profile (可选), onto (必需, 变基目标), requireAdmin (必需, 6位验证码)" },
+      { "commandIdentifier": "CherryPick", "description": "危险操作: 摘取指定提交应用到当前分支。需要管理员验证码。\n参数: profile (可选), commitHash (必需), requireAdmin (必需, 6位验证码)" },
+      { "commandIdentifier": "ProfileAdd", "description": "向 repos.json 添加新的仓库配置档。\n参数: profileName (必需), localPath (必需), pushUrl (可选), pushRemote (可选,默认origin), pushBranch (可选,默认main), pullUrl (可选), pullRemote (可选,默认upstream), pullBranch (可选,默认main), email (可选), username (可选), token (可选), mergeStrategy (可选,默认merge)" },
+      { "commandIdentifier": "ProfileEdit", "description": "编辑 repos.json 中已有的配置档字段，只传需要修改的字段即可。\n参数: profileName (必需), 其他字段同 ProfileAdd" },
+      { "commandIdentifier": "ProfileRemove", "description": "从 repos.json 中删除一个仓库配置档。\n参数: profileName (必需)" }
     ]
   }
 }
