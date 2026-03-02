@@ -1021,7 +1021,15 @@ class KnowledgeBaseManager {
                 } catch (e) { if (e.code !== 'ENOENT') console.warn(`Read error ${filePath}:`, e.message); }
             }));
 
-            if (docsByDiary.size === 0) { this.isProcessing = false; return; }
+            if (docsByDiary.size === 0) {
+                // 🛡️ 所有文件均无变更，安全移出队列，防止无限自检循环
+                batchFiles.forEach(f => {
+                    this.pendingFiles.delete(f);
+                    this.fileRetryCount.delete(f);
+                });
+                this.isProcessing = false;
+                return;
+            }
 
             // 2. 收集所有文本进行 Embedding
             const allChunksWithMeta = [];
